@@ -34,6 +34,22 @@ class ImagePreloader {
     return results;
   }
 
+  static Future<String> cacheImage(String url) async{
+    FileInfo? alreadyCached = await isImageAvailable(url);
+    if(alreadyCached != null){
+      return alreadyCached.file.path;
+    }
+   FileInfo fileInfo = await _cacheManager.downloadFile(
+      url
+    );
+   return fileInfo.file.path;
+  }
+
+  static Future<FileInfo?> isImageAvailable(String url) async{
+    final fileInfo = await _cacheManager.getFileFromCache(url);
+    return fileInfo;
+  }
+
   /// Checks if an image is already cached
   static Future<bool> isImageCached(String url) async {
     final fileInfo = await _cacheManager.getFileFromCache(url);
